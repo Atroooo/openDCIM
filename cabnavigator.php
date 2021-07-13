@@ -263,7 +263,7 @@ $pngAbsoluteFilePathCab = $tempDirCab.$fileNameCab;
 	
 $body.='<div id="infopanel">
 	<fieldset id="legend">
-		<legend>'.__("Markup Key")."</legend>
+		<legend>'.__("Markup Key")."</legend>\n"
 		<div>Cabinet ID : ".$cab->CabinetID."</div>
 		<div><img src='".$pngAbsoluteFilePathCab."'/></div>\n"
 .$legend.'
@@ -423,7 +423,6 @@ $body.='<div id="infopanel">
 			'.$cab->Notes.'
 		</div>
 	</fieldset>
-
 </div> <!-- END div#infopanel -->';
 
 	// If $head isn't empty then we must have added some style information so close the tag up.
@@ -460,7 +459,6 @@ echo $head,'  <script type="text/javascript" src="scripts/jquery.min.js"></scrip
 	window.weight=',$totalWeight,';
 	var form=$("<form>").attr({ method: "post", action: "cabnavigator.php" });
 	$("<input>").attr({ type: "hidden", name: "cabinetid", value: "',$cab->CabinetID,'"}).appendTo(form);
-
 	(function ($) {
 		$.fn.extend({
 			cookieList: function (cookieName, expireTime) {
@@ -510,7 +508,6 @@ echo $head,'  <script type="text/javascript" src="scripts/jquery.min.js"></scrip
 		if($("#cabnotes div").text().trim()==""){$("#cabnotes").hide();}
 		if($("#sensors div").text().trim()==""){$("#sensors").hide();}
 		if($("fieldset[name=pdu] div").text().trim()==""){$("fieldset[name=pdu]").hide();}
-
 		$("#verifyaudit").click(function(e){
 			e.preventDefault();
 			$("#auditmodal").dialog({
@@ -532,7 +529,6 @@ echo $head,'  <script type="text/javascript" src="scripts/jquery.min.js"></scrip
 				}
 			});
 		});
-
 		$("#verifydelete").click(function(e){
 			e.preventDefault();
 			$("#deletemodal").dialog({
@@ -832,5 +828,5 @@ if ( $config->ParameterArray["WorkOrderBuilder"]=='enabled' ) {
 }
 ?>
 </script>
-</body>
 </html>
+</body>

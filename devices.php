@@ -605,9 +605,6 @@
 			$dev->DeviceID=intval($_REQUEST['DeviceID']);
 			// If no action is requested then we must be just querying a device info.
 			// Skip all modification checks
-			//ANCIEN									
-			
-
 			$tagarray=array();
 			if(isset($_POST['tags'])){
 				$tagarray=json_decode($_POST['tags']);
@@ -823,6 +820,21 @@
 			// Finished updating devices or creating them.  Refresh the object with data from the DB
 			$dev->GetDevice();
 
+			// Audits are either at the individual device or the full cabinet level, so grab the latest date for both
+			$cabAudit = new CabinetAudit();
+			$cabAudit->CabinetID = $dev->Cabinet;
+			if ( $cabAudit->GetLastAudit() ) {
+				$lastCAudit = date("r", strtotime($cabAudit->AuditStamp));
+			} else {
+				$lastCAudit = "Never";
+			}
+
+			if ( $dev->AuditStamp > 0 ) {
+				$lastAudit = date("r",strtotime($dev->AuditStamp));
+			} else {
+				$lastAudit = "Never";
+			}
+																								
 			// Get any tags associated with this device
 			$tags=$dev->GetTags();
 			if(count($tags)>0){
@@ -1838,7 +1850,6 @@ echo '<div class="center"><div>
 					}
 echo '			</select>
 			</div>
-
 		</div>
 		<div>
 		   <div><label for="Label">'.__("Label").'</label></div>
@@ -1879,7 +1890,7 @@ echo '			</select>
 		</div>
 		<div>
 		   <div>'.__("Last Audit Completed").'</div>
-		   <div><span id="auditdate">'.((strtotime($dev->AuditStamp)>0)?date('r',strtotime($dev->AuditStamp)):__("Audit not yet completed")).'</span></div>
+		   		   <div><span id="auditdate">Cabinet: '.$lastCAudit.'<br>Device: '.$lastAudit.'</span></div>
 		</div>
 		<div>
 		   <div><label for="Owner">'.__("Departmental Owner").'</label></div>
@@ -2025,7 +2036,6 @@ echo '			</select>
 		   <div><label for="Height">',($dev->ParentDevice==0)?__("Height"):__("Number of slots"),'</label></div>
 		   <div><input type="number" class="required,validate[custom[onlyNumberSp]]" name="Height" id="Height" value="',$dev->Height,'"></div>
 		</div>
-
 		<div>
 		   <div><label for="Position">',__("Position"),'</label></div>
 		   <div><input type="number" class="required,validate[custom[onlyNumberSp],min[0],max[',$cab->CabinetHeight,']]" name="Position" id="Position" value="',$dev->Position,'"></div>
@@ -2222,7 +2232,11 @@ echo '
 
 		echo '
 				</select>
-			</div>
+			</div>';
+		if($pdu->PanelID >0){
+			print "<div><a href=\"power_panel.php?PanelID=$pdu->PanelID\">[ ".__("Goto Panel")." ]</a></div>\n";
+		}	
+		echo '
 		</div>
 		<div>
 			<div><label for="voltage">',__("Voltages:"),'</label></div>
